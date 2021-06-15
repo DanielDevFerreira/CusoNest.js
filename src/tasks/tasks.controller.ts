@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
@@ -8,6 +9,7 @@ import { TasksService } from './tasks.service';
 
 // a principal função do controller é somente receber a notificação do service e devolver a resposta
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
     constructor (private taskService: TasksService){}
 
