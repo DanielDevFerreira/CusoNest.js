@@ -14,13 +14,15 @@ export class TasksService {
    ){}
 
    // Pegando todos os registros do BD
+   // vai pegar todas as tarefas de acordo com o token do usuário
     async getAllTasks(filterDto: GetTasksFilterDto, user: User): Promise<TaskEntity[]>{
         return this.taskRepository.getTaskAll(filterDto, user);
     }
     
     // Pegando apenas um registro pelo id do BD
-   async getTaskById(id:string): Promise<TaskEntity>{
-       const found = await this.taskRepository.findOne(id);
+    // as tarefas so aparece, se o id da tarefa pertence ao token do usuario
+   async getTaskById(id:string, user: User): Promise<TaskEntity>{
+       const found = await this.taskRepository.findOne({ where: { id, user }});
 
        if(!found){
            throw new NotFoundException(`Task with ID ${id} not found`);
@@ -35,8 +37,9 @@ export class TasksService {
    }
 
    // Removendo um registro no BD
-   async removeTaskById(id: string): Promise<void>{
-        const result = await this.taskRepository.delete(id);
+   // Só vai remover a task, se for de acordo com o token do usuário
+   async removeTaskById(id: string, user: User): Promise<void>{
+        const result = await this.taskRepository.delete({id, user});
 
         if(result.affected === 0){
             throw new NotFoundException(`Task with ID ${id} not found`);
@@ -44,8 +47,9 @@ export class TasksService {
     }
 
     // Atualizando um registro no BD
-    async updateTaskStatus(id: string, status: TaskStatusBase): Promise<TaskEntity>{
-        const task = await this.getTaskById(id);
+    // só vai atualizar a task, se for de acordo com o token do usuário
+    async updateTaskStatus(id: string, status: TaskStatusBase, user: User): Promise<TaskEntity>{
+        const task = await this.getTaskById(id, user);
         
         task.status = status;
         await this.taskRepository.save(task);
