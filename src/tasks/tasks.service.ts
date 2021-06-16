@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskRepository } from './tasks.repository';
 import { TaskEntity } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusBase } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -12,8 +14,8 @@ export class TasksService {
    ){}
 
    // Pegando todos os registros do BD
-    async getAllTasks(filterDto: GetTasksFilterDto): Promise<TaskEntity[]>{
-        return this.taskRepository.getTaskAll(filterDto);
+    async getAllTasks(filterDto: GetTasksFilterDto, user: User): Promise<TaskEntity[]>{
+        return this.taskRepository.getTaskAll(filterDto, user);
     }
     
     // Pegando apenas um registro pelo id do BD
@@ -28,8 +30,8 @@ export class TasksService {
    }
 
    // Criando um novo registro no BD
-   createTask(createTaskDto: CreateTaskDto): Promise<TaskEntity>{
-       return this.taskRepository.createTask(createTaskDto);
+   createTask(createTaskDto: CreateTaskDto, user: User): Promise<TaskEntity>{
+       return this.taskRepository.createTask(createTaskDto, user);
    }
 
    // Removendo um registro no BD

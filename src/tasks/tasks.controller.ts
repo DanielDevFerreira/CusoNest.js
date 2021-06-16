@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/GetUser_Decoretor/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
@@ -14,8 +16,8 @@ export class TasksController {
     constructor (private taskService: TasksService){}
 
     @Get()
-    getAllTasks(@Query() filterDto: GetTasksFilterDto): Promise<TaskEntity[]>{
-        return this.taskService.getAllTasks(filterDto);
+    getAllTasks(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User): Promise<TaskEntity[]>{
+        return this.taskService.getAllTasks(filterDto, user);
     }
 
     @Get('/:id')
@@ -25,8 +27,8 @@ export class TasksController {
 
     // Mesmo método, porem usando DTO
     @Post()
-    createTask(@Body() createTaskDto: CreateTaskDto): Promise<TaskEntity>{
-        return this.taskService.createTask(createTaskDto);
+    createTask(@Body() createTaskDto: CreateTaskDto, @GetUser() user: User ): Promise<TaskEntity>{
+        return this.taskService.createTask(createTaskDto, user);
     }
 
     @Delete('/:id')
