@@ -1,6 +1,9 @@
 import {  IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class AuthCredentialsSignInDto {
+
+    id: string;
+
     @IsString()
     @IsNotEmpty()
     @IsEmail()
