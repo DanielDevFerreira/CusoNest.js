@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { UserRepository } from './user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt-strategy';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
     imports:[
@@ -16,7 +17,8 @@ import { JwtStrategy } from './jwt-strategy';
                 expiresIn: 3600,
             }
         }),
-        TypeOrmModule.forFeature([UserRepository])
+        TypeOrmModule.forFeature([UserRepository]),
+        forwardRef(() => TokenModule)
     ],
     controllers:[AuthController],
     providers:[AuthService, JwtStrategy],

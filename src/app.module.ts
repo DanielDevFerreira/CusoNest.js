@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { TokenModule } from './token/token.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { PassportModule } from '@nestjs/passport';
       synchronize: true,
     }),
     AuthModule,
+    TokenModule
   ],
   controllers: [],
   providers: [],

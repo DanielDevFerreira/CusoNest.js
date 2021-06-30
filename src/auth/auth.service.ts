@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentiais.dto';
 import { UserRepository } from './user.repository';
@@ -7,13 +7,16 @@ import { AuthCredentialsSignInDto } from './dto/auth-credentiais-signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-interface/jwt-payload.interface';
 import * as nodemailer from 'nodemailer';
+import { TokenService } from 'src/token/token.service';
 
 @Injectable()
 export class AuthService {
     constructor( 
         @InjectRepository(UserRepository)
+        @Inject(forwardRef(() => TokenService))
         private usersRepository: UserRepository,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private tokenService: TokenService
     ){}
 
     // método para criar usuario, implementado no repository
